@@ -1,22 +1,55 @@
-# Participiant: How to Contribute
-1. **Setup Your Codebase:**
+# Contributing Guide
 
-- Fork the repository (acmpesuecc/mutual-funds-manager) to your GitHub account
-- Clone your forked repository to your local machine using Git (make sure it's installed)
-```bash
-   git clone git@github.com:your-username/repo-name.git
-```
-2. **Make Your Changes:** After cloning and setting up your branch, make the necessary changes to the code in your IDE.
+Welcome! Here’s how you can contribute to **KissanDial**.
 
-3. **Commit and Push:** Commit your changes and push them to your fork:
-```
-git commit -m "Describe the changes you made"
-git push
-```
-Alternatively, use VSCode's inbuilt Git source control pane Ctrl+Shift+G if you're unconfortable with a CLI
+## Project Structure
+- The codebase is organized by feature modules and utility folders.
+- Please check the README for details about directories and file purposes.
 
-4. **Submit a Pull Request:** After pushing your changes, open a pull request from your fork to this repository (remember to reference the correct issue in your PR).
+## How to Contribute
 
-5. **Get Feedback:** Wait for a maintainer to review your pull request (PR) and provide feedback.
+1. **Fork and Clone:**
+   - Fork this repository to your GitHub account.
+   - Clone your fork to your local machine:
+     ```bash
+     git clone git@github.com:your-username/KissanDial.git
+     ```
 
-6. **Gain Bounty Points:** If everything is approved, your issue will be closed, and you'll gain bounty points on the leaderboard!
+2. **Branch and Edit:**
+   - Create a new branch for your feature or fix.
+   - Make your changes in your IDE.
+
+3. **Commit and Push:**
+   - Commit your changes with a clear message:
+     ```bash
+     git commit -m "Describe your changes"
+     git push
+     ```
+   - You can also use VSCode’s Git pane (Ctrl+Shift+G).
+
+4. **Pull Request (PR):**
+   - Open a PR from your branch to the main repository.
+   - Reference any related issue in the PR description.
+
+5. **Review:**
+   - Await feedback from maintainers.
+   - Make requested changes if necessary.
+
+6. **Bounty Points:**
+   - Approved PRs may award you bounty points!
+
+## PR Guidelines
+- Keep PRs focused and concise.
+- Describe *what* and *why* you changed.
+- Reference relevant issues.
+
+## Issue/Bug Guidelines
+- Search for existing issues before creating a new one.
+- When reporting, provide steps to reproduce, expected, and actual behavior.
+
+## Rules & Conventions
+- Follow existing code style and formatting.
+- Use meaningful variable and function names.
+- Add comments where helpful.
+
+Thank you for contributing!
