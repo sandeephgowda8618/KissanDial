@@ -1,6 +1,6 @@
 # KissanDial
 
-KissanDial is a voice call-based AI agent assistant designed to empower farmers by providing them with vital information on agricultural subsidies, weather updates, and more. By addressing key challenges faced by farmers, KissanDial aims to enhance their productivity and access to essential resources.
+KissanDial is a voice call-based AI agent assistant designed to empower farmers by providing them with vital information on agricultural subsidies, weather updates, and more. By addressing key challenges faced by farmers, KissanDial aims to improve access to critical resources and information.
 
 ## Features
 
@@ -26,7 +26,7 @@ During our discussions with 4-5 farmers, we identified several key challenges:
 
 ## Solution
 
-KissanDial addresses these challenges by providing a centralized, easily accessible platform for farmers to obtain accurate and timely information. By leveraging advanced technologies, KissanDial ensures that farmers receive relevant updates and can make informed decisions.
+KissanDial addresses these challenges by providing a centralized, easily accessible platform for farmers to obtain accurate and timely information. By leveraging advanced technologies, KissanDial ensures that farmers receive up-to-date details to support their agricultural decisions.
 
 ## How It Works
 
@@ -35,3 +35,39 @@ KissanDial addresses these challenges by providing a centralized, easily accessi
 3. **Continuous Updates**: The system is regularly updated to ensure that the information provided is current and accurate.
 
 KissanDial is dedicated to supporting farmers by providing the information they need to succeed in their agricultural endeavors.
+
+## Build & Run Locally
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/acmpesuecc/KissanDial.git
+   cd KissanDial
+   ```
+
+2. **Install dependencies**
+   - Ensure you have Python 3.8+ installed.
+   - Install required packages:
+     ```bash
+     pip install -r requirements.txt
+     ```
+3. **Configure environment**
+   - Set up Twilio credentials and other API keys as needed in a `.env` file.
+
+4. **Run the project**
+   - Execute the main script or server:
+     ```bash
+     python app/main.py
+     ```
+
+5. **Testing**
+   - Run provided test scripts or use your preferred testing framework.
+
+## Contributing
+
+We welcome contributions! Please read [CONTRIBUTING.md](https://github.com/acmpesuecc/KissanDial/blob/main/CONTRIBUTING.md) for guidelines.
+
+## License
+
+This repository is open-source and licensed under the terms described in [LICENSE](https://github.com/acmpesuecc/KissanDial/blob/main/LICENSE).
+
+**Maintained by:** [ShadowMarty](https://github.com/ShadowMarty)
