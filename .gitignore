@@ -1,4 +1,3 @@
-
 # KissanDial - Git Ignore File
 # Exclude unwanted files and directories from version control
 
@@ -213,3 +212,29 @@ docs/generated/
 # Local testing results
 test_results/
 coverage_reports/
+
+# Demo and test files (keep out of main repository)
+demo_*.py
+test_*.py
+*_demo.py
+*_test.py
+check_*.py
+sms_demo.py
+
+# MCP functionality demonstrations
+demo_mcp_functionality.py
+demo_enhanced_subsidy.py
+demo_complete_enhancement.py
+test_agent_sms_complete.py
+test_sms_enhanced.py
+
+# Documentation generated during development
+FINAL_MCP_IMPLEMENTATION.md
+PR_SUMMARY.md
+IMPLEMENTATION_STATUS.md
+
+# Voice recordings and audio files
+*.m4a
+*.wav
+*.mp3
+farmer_interviews/

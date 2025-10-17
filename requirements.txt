@@ -1,4 +1,3 @@
-Requirements:
 Flask>=3.0
 twilio>=8.0.0
 llama-index
@@ -9,3 +8,4 @@ mcp>=1.18.0
 pytest-asyncio
 google-generativeai>=0.3.0
 llama-index-llms-gemini
+aiohttp>=3.8.0
