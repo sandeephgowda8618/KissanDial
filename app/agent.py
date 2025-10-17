@@ -1,8 +1,9 @@
 from flask import Flask, request
 from twilio.twiml.voice_response import VoiceResponse, Gather
 import os
+import sys
+from pathlib import Path
 from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, ServiceContext
-from llama_index.llms.openai import OpenAI
 from llama_index.core.agent import ReActAgent
 from llama_index.core.tools import QueryEngineTool, ToolMetadata, FunctionTool
 from llama_index.core.agent import FunctionCallingAgentWorker
@@ -11,19 +12,48 @@ import pandas as pd
 from twilio.rest import Client
 from dotenv import load_dotenv
 
+# Add tools directory to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+# Import LLM factory
+try:
+    from tools.llm_factory import create_llm, get_provider_info
+    LLM_FACTORY_AVAILABLE = True
+    print("LLM factory available", file=sys.stderr)
+except ImportError as e:
+    print(f"LLM factory not available: {e}", file=sys.stderr)
+    LLM_FACTORY_AVAILABLE = False
+    # Fallback to direct OpenAI import
+    from llama_index.llms.openai import OpenAI
+
 # Loads the variables from env
 load_dotenv()
 
-# This loads the API Key of OPEN AI from env files
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+# Get LLM provider info for logging
+if LLM_FACTORY_AVAILABLE:
+    provider_info = get_provider_info()
+    print(f"LLM Provider: {provider_info['provider']}", file=sys.stderr)
+    print(f"API Key Configured: {provider_info['api_key_configured']}", file=sys.stderr)
+    print(f"Model: {provider_info['model']}", file=sys.stderr)
 
 # This loads the TWILIO Credentials
 TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
 
-if not OPENAI_API_KEY:
-    # In case of there not being any API Key assigned, then it throws an error
-    raise RuntimeError("OPENAI_API_KEY not set. Set it in environment or .env")
+# Check for required environment variables and create LLM
+if LLM_FACTORY_AVAILABLE:
+    try:
+        # This will validate that required API keys are present
+        llm = create_llm()
+        print(f"Successfully created LLM instance", file=sys.stderr)
+    except ValueError as e:
+        raise RuntimeError(str(e))
+else:
+    # Fallback to OpenAI only
+    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+    if not OPENAI_API_KEY:
+        raise RuntimeError("OPENAI_API_KEY not set. Set it in environment or .env")
+    llm = OpenAI(temperature=0, model="gpt-4o", api_key=OPENAI_API_KEY)
 if not TWILIO_AUTH_TOKEN:
     # In case of there not being any API Key assigned, then it throws an error
     raise RuntimeError("TWILIO_AUTH_TOKEN not set. Set it in environment or .env")
@@ -37,14 +67,14 @@ to_say = 'Hi welcome to the Agricultural Assistant. How can I help you today?'
 app = Flask(__name__)
 
 # Load and index documents
-subsidy_docs = SimpleDirectoryReader(input_files=["main_subsidy_data.csv"]).load_data()
+subsidy_docs = SimpleDirectoryReader(input_files=["../data/subsidies/central/main_subsidy_data.csv"]).load_data()
 subsidy_index = VectorStoreIndex.from_documents(subsidy_docs)
 
 # Create query engine
 subsidy_engine = subsidy_index.as_query_engine(similarity_top_k=6)
 
 # Load the CSV file
-df = pd.read_csv("main_subsidy_data.csv")
+df = pd.read_csv("../data/subsidies/central/main_subsidy_data.csv")
 
 def send_sms_with_subsidy_info(query: str) -> str:
     """
@@ -121,11 +151,7 @@ Remember to follow the below rules strictly:
 """
 
 # Initialize the agent
-
-# Added api_key featched from the .env
-llm = OpenAI(temperature=0, model="gpt-4o", api_key = OPENAI_API_KEY)
-memory = ChatMemoryBuffer.from_defaults(token_limit=2048)
-llm = OpenAI(temperature=0, model="gpt-4", api_key = OPENAI_API_KEY)
+# LLM is already created above during validation
 memory = ChatMemoryBuffer.from_defaults(token_limit=2048)
 agent_worker = FunctionCallingAgentWorker.from_tools(
   [subsidy_tool, sms_tool],
@@ -177,4 +203,10 @@ async def handle_speech():
     return str(resp)
 
 if __name__ == "__main__":
+    print("Starting KissanDial Agricultural Assistant...")
+    if LLM_FACTORY_AVAILABLE:
+        provider_info = get_provider_info()
+        print(f"LLM Provider: {provider_info['provider']} - {provider_info['model']}")
+    else:
+        print("LLM Provider: OpenAI (fallback)")
     app.run(debug=True)
