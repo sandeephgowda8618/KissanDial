@@ -9,10 +9,28 @@ from llama_index.core.agent import FunctionCallingAgentWorker
 from llama_index.core.memory import ChatMemoryBuffer
 import pandas as pd
 from twilio.rest import Client
+from dotenv import load_dotenv
 
+# Loads the variables from env
+load_dotenv()
 
-# Set up OpenAI API key
-os.environ["OPENAI_API_KEY"] = ""
+# This loads the API Key of OPEN AI from env files
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+
+# This loads the TWILIO Credentials
+TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
+
+if not OPENAI_API_KEY:
+    # In case of there not being any API Key assigned, then it throws an error
+    raise RuntimeError("OPENAI_API_KEY not set. Set it in environment or .env")
+if not TWILIO_AUTH_TOKEN:
+    # In case of there not being any API Key assigned, then it throws an error
+    raise RuntimeError("TWILIO_AUTH_TOKEN not set. Set it in environment or .env")
+if not TWILIO_ACCOUNT_SID:
+    # In case of there not being any API Key assigned, then it throws an error
+    raise RuntimeError("TWILIO_ACCOUNT_SID not set. Set it in environment or .env")
+
 
 to_say = 'Hi welcome to the Agricultural Assistant. How can I help you today?'
 
@@ -41,8 +59,8 @@ def send_sms_with_subsidy_info(query: str) -> str:
     # for subsidy in relevant_subsidies:
     sms_body += f"{results}"
 
-    account_sid = ''
-    auth_token = ''
+    account_sid = TWILIO_ACCOUNT_SID
+    auth_token = TWILIO_AUTH_TOKEN
     client = Client(account_sid, auth_token)
     
     try:
@@ -103,13 +121,17 @@ Remember to follow the below rules strictly:
 """
 
 # Initialize the agent
-llm = OpenAI(temperature=0, model="gpt-4o")
+
+# Added api_key featched from the .env
+llm = OpenAI(temperature=0, model="gpt-4o", api_key = OPENAI_API_KEY)
 memory = ChatMemoryBuffer.from_defaults(token_limit=2048)
-llm = OpenAI(temperature=0, model="gpt-4")
+llm = OpenAI(temperature=0, model="gpt-4", api_key = OPENAI_API_KEY)
 memory = ChatMemoryBuffer.from_defaults(token_limit=2048)
 agent_worker = FunctionCallingAgentWorker.from_tools(
-  [subsidy_tool, sms_tool], system_prompt=CUSTOM_PROMPT, 
-  memory=memory, llm=llm
+  [subsidy_tool, sms_tool],
+  system_prompt=CUSTOM_PROMPT,
+  memory=memory,
+  llm=llm,
   verbose=True,
   allow_parallel_tool_calls=False,
 )
